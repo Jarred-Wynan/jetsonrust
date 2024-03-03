@@ -3,13 +3,13 @@
 name = "webrtcdemo"
 version = "0.0.1"
 authors = ["Jarred Wynan <jarred@boresighttargets.com>"]
-edition = "2021"
+edition = "2018"
 
 [dependencies]
 futures = "0.3"
 async-std = "1"
 structopt = { version = "0.3", default-features = false }
-anyhow = "^1"
+anyhow = "1"
 rand = "0.8"
 async-tungstenite = { version = "0.16", features = ["async-std-runtime", "async-native-tls"] }
 gst = { package = "gstreamer", version = "0.17", features = ["v1_14"] }
