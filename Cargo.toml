@@ -9,7 +9,7 @@ edition = "2021"
 futures = "0.3"
 async-std = "1"
 structopt = { version = "0.3", default-features = false }
-anyhow = "1"
+anyhow = "1.0"
 rand = "0.8"
 async-tungstenite = { version = "0.16", features = ["async-std-runtime", "async-native-tls"] }
 gst = { package = "gstreamer", version = "0.17", features = ["v1_14"] }
