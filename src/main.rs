@@ -605,7 +605,7 @@ fn check_plugins() -> Result<(), anyhow::Error> {
         "videoconvert",
         "audioconvert",
         "autodetect",
-        //"opus",
+        "opus",
         "vpx",
         "webrtc",
         //"nice",
