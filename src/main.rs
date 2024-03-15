@@ -39,7 +39,7 @@ macro_rules! upgrade_weak {
 
 #[derive(Debug, StructOpt)]
 struct Args {
-    #[structopt(short, long, default_value = "wss://webrtc.gstreamer.net:8443")]
+    #[structopt(short, long, default_value = "ws://10.0.0.136:8443")]
     server: String,
     #[structopt(short, long)]
     peer_id: Option<u32>,
@@ -112,9 +112,7 @@ impl App {
     > {
         // Create the GStreamer pipeline
         let pipeline = gst::parse_launch(
-        "videotestsrc pattern=ball is-live=true ! vp8enc deadline=1 ! rtpvp8pay pt=96 ! webrtcbin. \
-         audiotestsrc is-live=true ! opusenc ! rtpopuspay pt=97 ! application/x-rtp,encoding-name=OPUS ! webrtcbin. \
-         webrtcbin name=webrtcbin"
+        "nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM),width=1920,height=1080,framerate=30/1 ! nvv4l2h264enc ! h264parse ! rtph264pay config-interval=1 pt=96 ! webrtcbin. webrtcbin name=webrtcbin"
     )?;
 
         // Downcast from gst::Element to gst::Pipeline
@@ -145,6 +143,8 @@ impl App {
             webrtcbin,
             send_msg_tx: Mutex::new(send_ws_msg_tx),
         }));
+
+        println!("starting connection");
 
         // Connect to on-negotiation-needed to handle sending an Offer
         if app.args.peer_id.is_some() {
@@ -229,6 +229,7 @@ impl App {
 
     // Handle WebSocket messages, both our own as well as WebSocket protocol messages
     fn handle_websocket_message(&self, msg: &str) -> Result<(), anyhow::Error> {
+        println!("starting connection");
         if msg.starts_with("ERROR") {
             bail!("Got error message: {}", msg);
         }
@@ -551,6 +552,8 @@ async fn run(
     // Fuse the Stream, required for the select macro
     let mut ws_stream = ws_stream.fuse();
 
+    println!("rust started");
+
     // Create our application state
     let (app, send_gst_msg_rx, send_ws_msg_rx) = App::new(args)?;
 
@@ -602,7 +605,7 @@ fn check_plugins() -> Result<(), anyhow::Error> {
     let needed = [
         "videotestsrc",
         "audiotestsrc",
-        "videoconvert",
+        //"videoconvert",
         "audioconvert",
         "autodetect",
         "opus",
@@ -614,7 +617,7 @@ fn check_plugins() -> Result<(), anyhow::Error> {
         "rtpmanager",
         "rtp",
         "playback",
-        "videoscale",
+        //"videoscale",
         "audioresample",
     ];
 
