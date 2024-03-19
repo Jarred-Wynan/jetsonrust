@@ -20,8 +20,8 @@ use serde_derive::{Deserialize, Serialize};
 
 use anyhow::{anyhow, bail, Context};
 
-const STUN_SERVER: &str = "stun://stun.l.google.com:19302";
-const TURN_SERVER: &str = "turn://foo:bar@webrtc.gstreamer.net:3478";
+//const STUN_SERVER: &str = "stun://stun.l.google.com:19302";
+//const TURN_SERVER: &str = "turn://foo:bar@webrtc.gstreamer.net:3478";
 
 // upgrade weak reference or return
 #[macro_export]
@@ -39,7 +39,7 @@ macro_rules! upgrade_weak {
 
 #[derive(Debug, StructOpt)]
 struct Args {
-    #[structopt(short, long, default_value = "ws://10.0.0.136:8443")]
+    #[structopt(short, long, default_value = "ws://127.0.0.1:8443")]
     server: String,
     #[structopt(short, long)]
     peer_id: Option<u32>,
@@ -112,7 +112,8 @@ impl App {
     > {
         // Create the GStreamer pipeline
         let pipeline = gst::parse_launch(
-        "nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM),width=1920,height=1080,framerate=30/1 ! nvv4l2h264enc ! h264parse ! rtph264pay config-interval=1 pt=96 ! webrtcbin. webrtcbin name=webrtcbin"
+            "videotestsrc pattern=ball is-live=true ! vp8enc deadline=1 keyframe-max-dist=2000 ! rtpvp8pay name=vpay pt=96 picture-id-mode=15-bit ! webrtcbin. webrtcbin name=webrtcbin"
+            //"nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM),width=1920,height=1080,framerate=30/1 ! nvv4l2h264enc ! h264parse ! rtph264pay config-interval=1 pt=96 ! webrtcbin. webrtcbin name=webrtcbin"
     )?;
 
         // Downcast from gst::Element to gst::Pipeline
@@ -126,8 +127,8 @@ impl App {
             .expect("can't find webrtcbin");
 
         // Set some properties on webrtcbin
-        webrtcbin.set_property_from_str("stun-server", STUN_SERVER);
-        webrtcbin.set_property_from_str("turn-server", TURN_SERVER);
+        //webrtcbin.set_property_from_str("stun-server", STUN_SERVER);
+        //webrtcbin.set_property_from_str("turn-server", TURN_SERVER);
         webrtcbin.set_property_from_str("bundle-policy", "max-bundle");
 
         // Create a stream for handling the GStreamer message asynchronously
