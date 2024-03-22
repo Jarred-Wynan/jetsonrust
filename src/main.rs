@@ -39,7 +39,7 @@ macro_rules! upgrade_weak {
 
 #[derive(Debug, StructOpt)]
 struct Args {
-    #[structopt(short, long, default_value = "ws://127.0.0.1:8443")]
+    #[structopt(short, long, default_value = "ws://10.1.1.126:8443")]
     server: String,
     #[structopt(short, long)]
     peer_id: Option<u32>,

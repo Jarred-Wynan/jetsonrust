@@ -1,6 +1,6 @@
 [package]
 
-name = "webrtcdemo"
+name = "jarredswebrtcdemo"
 version = "0.0.1"
 authors = ["Jarred Wynan <jarred@boresighttargets.com>"]
 edition = "2021"
