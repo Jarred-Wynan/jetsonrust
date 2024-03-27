@@ -112,7 +112,8 @@ impl App {
     > {
         // Create the GStreamer pipeline
         let pipeline = gst::parse_launch(
-        "nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM),width=3840,height=2160,framerate=30/1 ! nvv4l2h264enc ! h264parse ! rtph264pay config-interval=1 pt=96 ! webrtcbin. webrtcbin name=webrtcbin"
+        "nvarguscamerasrc sensor-id=0 ! video/x-raw(memory:NVMM),width=3840,height=2160,framerate=30/1 ! nvv4l2h264enc ! h264parse ! rtph264pay config-interval=-1 pt=96 ! webrtcbin. webrtcbin name=webrtcbin"
+        //"videotestsrc pattern=ball is-live=true ! vp8enc deadline=1 keyframe-max-dist=2000 ! rtpvp8pay name=vpay pt=96 picture-id-mode=15-bit ! webrtcbin. webrtcbin name=webrtcbin"
     )?;
 
         // Downcast from gst::Element to gst::Pipeline
@@ -549,7 +550,7 @@ async fn run(
     // Fuse the Stream, required for the select macro
     let mut ws_stream = ws_stream.fuse();
 
-    println!("Rust started with base version from Sunday 24th March");
+    println!("Rust started with version from Wednesday 27th March, config-interval=-1");
 
     // Create our application state
     let (app, send_gst_msg_rx, send_ws_msg_rx) = App::new(args)?;
